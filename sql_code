@@ -1,0 +1,145 @@
+-- CREATE DATABASE blood_bankp;
+USE blood_bankp;
+CREATE TABLE tbl_user(
+    user_id INT PRIMARY KEY NOT NULL,
+    username VARCHAR(30) NOT NULL,
+    contact VARCHAR(15) NOT NULL,
+    user_category_id VARCHAR(10) NOT NULL,
+    status INT NOT NULL,
+    password VARCHAR(10) NOT NULL
+);
+
+INSERT INTO tbl_user VALUES
+(10001,'Lalit','9000000001','CAT01',1,'pass1'),
+(10002,'Manish','9000000002','CAT02',1,'pass2'),
+(10003,'Deepak','9000000003','CAT03',1,'pass3'),
+(10004,'Karan','9000000004','CAT04',1,'pass4'),
+(10005,'Rinku','9000000005','CAT05',1,'pass5');
+
+
+CREATE TABLE tbl_blood_group(
+    blood_group_id INT PRIMARY KEY NOT NULL,
+    blood_group_name VARCHAR(5) NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES tbl_user(user_id)
+);
+
+INSERT INTO tbl_blood_group VALUES
+(1,'O+',10001),
+(2,'A+',10002),
+(3,'B+',10003),
+(4,'AB+',10004),
+(5,'O-',10005);
+
+
+CREATE TABLE tbl_donor(
+    donor_id INT PRIMARY KEY NOT NULL,
+    donor_complete_name VARCHAR(30) NOT NULL,
+    blood_group_id INT NOT NULL,
+    address VARCHAR(50) NOT NULL,
+    contact VARCHAR(15) NOT NULL,
+    age INT NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (blood_group_id) REFERENCES tbl_blood_group(blood_group_id),
+    FOREIGN KEY (user_id) REFERENCES tbl_user(user_id)
+);
+
+INSERT INTO tbl_donor VALUES
+(2301,'Lalit',1,'Delhi','9000000001',25,'Male',10001),
+(2302,'Manish',2,'Noida','9000000002',26,'Male',10002),
+(2303,'Deepak',3,'Ghaziabad','9000000003',27,'Male',10003),
+(2304,'Karan',4,'Meerut','9000000004',28,'Male',10004),
+(2305,'Rinku',5,'Jaipur','9000000005',29,'Male',10005);
+
+
+CREATE TABLE tbl_recipient(
+    recipient_id INT PRIMARY KEY NOT NULL,
+    recipient_complete_name VARCHAR(30) NOT NULL,
+    blood_group_id INT NOT NULL,
+    address VARCHAR(50) NOT NULL,
+    contact VARCHAR(15) NOT NULL,
+    age INT NOT NULL,
+    gender VARCHAR(10) NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (blood_group_id) REFERENCES tbl_blood_group(blood_group_id),
+    FOREIGN KEY (user_id) REFERENCES tbl_user(user_id)
+);
+
+INSERT INTO tbl_recipient VALUES
+(1201,'Lalit',1,'Delhi','9000000001',30,'Male',10001),
+(1202,'Manish',2,'Noida','9000000002',31,'Male',10002),
+(1203,'Deepak',3,'Ghaziabad','9000000003',32,'Male',10003),
+(1204,'Karan',4,'Meerut','9000000004',33,'Male',10004),
+(1205,'Rinku',5,'Jaipur','9000000005',34,'Male',10005);
+
+
+CREATE TABLE tbl_blood_request(
+    request_id INT PRIMARY KEY NOT NULL,
+    requested_by VARCHAR(30) NOT NULL,
+    recipient_id INT NOT NULL,
+    date_of_request DATE NOT NULL,
+    blood_group_id INT NOT NULL,
+    no_of_bags INT NOT NULL,
+    amount_per_bag FLOAT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (recipient_id) REFERENCES tbl_recipient(recipient_id),
+    FOREIGN KEY (blood_group_id) REFERENCES tbl_blood_group(blood_group_id),
+    FOREIGN KEY (user_id) REFERENCES tbl_user(user_id)
+);
+
+INSERT INTO tbl_blood_request VALUES
+(1301,'Lalit',1201,'2001-04-01',1,2,500,10001),
+(1302,'Manish',1202,'2001-04-02',2,1,600,10002),
+(1303,'Deepak',1203,'2001-04-03',3,3,400,10003),
+(1304,'Karan',1204,'2001-04-04',4,2,700,10004),
+(1305,'Rinku',1205,'2001-04-05',5,1,800,10005);
+
+
+CREATE TABLE tbl_blood_issued(
+    blood_issue_id INT PRIMARY KEY NOT NULL,
+    request_id INT NOT NULL,
+    issued_by VARCHAR(30) NOT NULL,
+    issued_to VARCHAR(30) NOT NULL,
+    issued_date DATE NOT NULL,
+    amount_paid FLOAT NOT NULL,
+    user_id INT NOT NULL,
+    FOREIGN KEY (request_id) REFERENCES tbl_blood_request(request_id),
+    FOREIGN KEY (user_id) REFERENCES tbl_user(user_id)
+);
+
+INSERT INTO tbl_blood_issued VALUES
+(1101,1301,'Manish','Lalit','2001-04-02',1000,10001),
+(1102,1302,'Deepak','Manish','2001-04-03',600,10002),
+(1103,1303,'Karan','Deepak','2001-04-04',1200,10003),
+(1104,1304,'Rinku','Karan','2001-04-05',1400,10004),
+(1105,1305,'Lalit','Rinku','2001-04-06',800,10005);
+
+
+CREATE TABLE blood_collection(
+    blood_collection_id INT PRIMARY KEY NOT NULL,
+    donor_id INT NOT NULL,
+    blood_group_id INT NOT NULL,
+    hospital VARCHAR(50) NOT NULL,
+    user_id INT NOT NULL,
+    collection_date DATE NOT NULL,
+    FOREIGN KEY (donor_id) REFERENCES tbl_donor(donor_id),
+    FOREIGN KEY (blood_group_id) REFERENCES tbl_blood_group(blood_group_id),
+    FOREIGN KEY (user_id) REFERENCES tbl_user(user_id)
+);
+
+INSERT INTO blood_collection VALUES
+(1401,2301,1,'City Hospital',10001,'2001-04-01'),
+(1402,2302,2,'Metro Hospital',10002,'2001-04-02'),
+(1403,2303,3,'Life Care',10003,'2001-04-03'),
+(1404,2304,4,'Health Plus',10004,'2001-04-04'),
+(1405,2305,5,'Medico',10005,'2001-04-05');
+
+
+SELECT * FROM tbl_user;
+SELECT * FROM tbl_blood_group;
+SELECT * FROM tbl_donor;
+SELECT * FROM tbl_recipient;
+SELECT * FROM tbl_blood_request;
+SELECT * FROM tbl_blood_issued;
+SELECT * FROM blood_collection;
